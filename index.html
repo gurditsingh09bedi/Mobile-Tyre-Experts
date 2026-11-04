@@ -98,6 +98,18 @@ h2{margin:0;font-family:var(--display);font-weight:800;font-size:28px;text-trans
 .btn.y{background:var(--amber);color:var(--amber-ink)}
 .btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--line);font-size:17px}
 
+/* 3D night-road background behind the whole page */
+#road{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;pointer-events:none;display:block}
+.glass{background:rgba(26,29,33,.62)!important;-webkit-backdrop-filter:blur(10px) saturate(1.2);backdrop-filter:blur(10px) saturate(1.2)}
+.act,.facts,.review,.svc span,.social a{-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.act{background:rgba(26,29,33,.62)}
+.act:hover,.act:active{background:rgba(32,35,40,.8)}
+.act.save{background:var(--chalk)}
+.facts,.review{background:rgba(26,29,33,.6)}
+.svc span,.social a{background:rgba(17,19,22,.55)}
+.hero{background:rgba(26,29,33,.55);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.act,.review,.facts,.hero{box-shadow:0 18px 40px -20px rgba(0,0,0,.8)}
+
 .social{display:flex;gap:10px;justify-content:center}
 .social a{width:48px;height:48px;border-radius:50%;border:1px solid var(--kerb);display:grid;place-items:center;color:var(--chalk)}
 .social a:hover{border-color:var(--amber);color:var(--amber)}
@@ -125,6 +137,7 @@ footer a{color:var(--muted);text-decoration:underline}
 </head>
 <body>
 
+<canvas id="road" aria-hidden="true"></canvas>
 <div class="wrap">
   <div class="status" aria-label="Service status">
     <span class="live"><i class="dot" aria-hidden="true"></i>Fitters on call now</span>
@@ -308,6 +321,111 @@ document.querySelectorAll('.review-link').forEach(a => a.href = GOOGLE_REVIEW_UR
   };
   modal.addEventListener('click', e => { if (e.target === modal) close(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) close(); });
+})();
+
+
+/* ---------- 3D night road background (plain canvas, no library) ---------- */
+(function(){
+  const c = document.getElementById('road'); if (!c || !c.getContext) return;
+  const g = c.getContext('2d');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W, H, dpr, mx = 0, tmx = 0, scrollF = 0;
+  function size(){
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    c.width = W * dpr; c.height = H * dpr; g.setTransform(dpr,0,0,dpr,0,0);
+  }
+  size(); addEventListener('resize', size);
+  addEventListener('pointermove', e => { tmx = (e.clientX / W - .5); }, { passive: true });
+  addEventListener('scroll', () => { scrollF = Math.min(1, scrollY / Math.max(1, document.body.scrollHeight - H)); }, { passive: true });
+
+  // street lights + oncoming cars
+  const lights = Array.from({length: 18}, (_, i) => ({ z: i / 18, side: i % 2 ? 1 : -1 }));
+  const cars = Array.from({length: 4}, (_, i) => ({ z: Math.random(), lane: i % 2 ? .18 : -.18, red: i % 2 === 0 }));
+  const stars = Array.from({length: 70}, () => ({ x: Math.random(), y: Math.random() * .4, r: Math.random() * 1.1 + .2, t: Math.random() * 6 }));
+
+  let off = 0, last = performance.now();
+  function proj(x, z, hy, vx){        // x in road units (-1..1), z 0 (horizon) .. 1 (viewer)
+    const d = 0.04 + z * z * 1.4;     // perspective depth curve
+    return { x: vx + x * W * d * .9, y: hy + (H - hy) * (d / 1.44), s: d };
+  }
+  function draw(now){
+    const dt = Math.min(50, now - last) / 1000; last = now;
+    if (!reduce) off = (off + dt * .55) % 1;
+    mx += (tmx - mx) * .05;
+    const hy = H * (0.30 + scrollF * 0.12);     // horizon drops as you scroll: camera tilts down the road
+    const vx = W / 2 + mx * W * .18;
+
+    // sky
+    let sky = g.createLinearGradient(0, 0, 0, hy);
+    sky.addColorStop(0, '#07080A'); sky.addColorStop(1, '#1B1710');
+    g.fillStyle = sky; g.fillRect(0, 0, W, hy + 1);
+    stars.forEach(s => { g.globalAlpha = .25 + .25 * Math.sin(now / 900 + s.t); g.fillStyle = '#F3F2EE'; g.beginPath(); g.arc(s.x * W, s.y * hy * 2.2, s.r, 0, 7); g.fill(); });
+    g.globalAlpha = 1;
+    // horizon glow
+    const glow = g.createRadialGradient(vx, hy, 0, vx, hy, W * .7);
+    glow.addColorStop(0, 'rgba(255,194,26,.28)'); glow.addColorStop(.35, 'rgba(255,140,20,.07)'); glow.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = glow; g.fillRect(0, 0, W, H);
+
+    // ground
+    let gr = g.createLinearGradient(0, hy, 0, H);
+    gr.addColorStop(0, '#15130F'); gr.addColorStop(1, '#0B0C0E');
+    g.fillStyle = gr; g.fillRect(0, hy, W, H - hy);
+
+    // road surface
+    const a = proj(-1, 0, hy, vx), b = proj(1, 0, hy, vx), cc = proj(1, 1, hy, vx), d = proj(-1, 1, hy, vx);
+    g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(b.x, b.y); g.lineTo(cc.x, cc.y); g.lineTo(d.x, d.y); g.closePath();
+    const rs = g.createLinearGradient(0, hy, 0, H); rs.addColorStop(0, '#1E1C18'); rs.addColorStop(1, '#141619');
+    g.fillStyle = rs; g.fill();
+
+    // perspective tread grid on the ground (tyre-track feel)
+    g.strokeStyle = 'rgba(255,194,26,.06)'; g.lineWidth = 1;
+    for (let i = -8; i <= 8; i++){ const p0 = proj(i * .5, 0, hy, vx), p1 = proj(i * .5, 1, hy, vx); g.beginPath(); g.moveTo(p0.x, p0.y); g.lineTo(p1.x, p1.y); g.stroke(); }
+    for (let k = 0; k < 14; k++){ const z = ((k / 14) + off * .5) % 1; const l = proj(-4, z, hy, vx), r = proj(4, z, hy, vx); g.globalAlpha = z; g.beginPath(); g.moveTo(l.x, l.y); g.lineTo(r.x, r.y); g.stroke(); }
+    g.globalAlpha = 1;
+
+    // road edge lines
+    g.strokeStyle = 'rgba(243,242,238,.55)'; g.lineWidth = 2;
+    [[-0.96],[0.96]].forEach(([x]) => { const p0 = proj(x, 0, hy, vx), p1 = proj(x, 1, hy, vx); g.beginPath(); g.moveTo(p0.x, p0.y); g.lineTo(p1.x, p1.y); g.stroke(); });
+
+    // moving amber centre dashes
+    for (let k = 0; k < 16; k++){
+      const z0 = ((k / 16) + off) % 1, z1 = Math.min(1, z0 + .03);
+      const l0 = proj(-.025, z0, hy, vx), r0 = proj(.025, z0, hy, vx), l1 = proj(-.025, z1, hy, vx), r1 = proj(.025, z1, hy, vx);
+      g.fillStyle = `rgba(255,194,26,${.25 + z0 * .75})`;
+      g.beginPath(); g.moveTo(l0.x, l0.y); g.lineTo(r0.x, r0.y); g.lineTo(r1.x, r1.y); g.lineTo(l1.x, l1.y); g.closePath(); g.fill();
+    }
+
+    // street lights rushing past
+    lights.forEach(L => {
+      if (!reduce) L.z = (L.z + dt * .28) % 1;
+      const p = proj(L.side * 1.35, L.z, hy, vx), top = p.y - p.s * H * .32;
+      g.strokeStyle = `rgba(80,86,94,${L.z})`; g.lineWidth = Math.max(1, p.s * 3);
+      g.beginPath(); g.moveTo(p.x, p.y); g.lineTo(p.x, top); g.stroke();
+      const r = Math.max(2, p.s * 26), lg = g.createRadialGradient(p.x, top, 0, p.x, top, r * 3);
+      lg.addColorStop(0, `rgba(255,214,120,${.9 * L.z})`); lg.addColorStop(1, 'rgba(255,194,26,0)');
+      g.fillStyle = lg; g.beginPath(); g.arc(p.x, top, r * 3, 0, 7); g.fill();
+    });
+
+    // car lights: white headlights coming, red tail lights going
+    cars.forEach(C => {
+      if (!reduce) C.z = (C.z + dt * (C.red ? .08 : .22)) % 1;
+      const z = C.red ? 1 - C.z : C.z, p = proj(C.lane * (C.red ? -1 : 1), z, hy, vx), r = Math.max(1.2, p.s * 8), gap = p.s * W * .05;
+      g.fillStyle = C.red ? `rgba(255,60,50,${.4 + z * .5})` : `rgba(255,248,225,${.4 + z * .6})`;
+      g.shadowColor = g.fillStyle; g.shadowBlur = r * 4;
+      g.beginPath(); g.arc(p.x - gap, p.y - r, r, 0, 7); g.arc(p.x + gap, p.y - r, r, 0, 7); g.fill();
+      g.shadowBlur = 0;
+    });
+
+    // vignette so text stays readable
+    const v = g.createRadialGradient(W / 2, H * .55, H * .2, W / 2, H * .55, H * .9);
+    v.addColorStop(0, 'rgba(11,12,14,0)'); v.addColorStop(1, 'rgba(11,12,14,.75)');
+    g.fillStyle = v; g.fillRect(0, 0, W, H);
+
+    if (!reduce && !document.hidden) requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && !reduce) { last = performance.now(); requestAnimationFrame(draw); } });
 })();
 
 /* ---------- 3D tilt on action tiles ---------- */
