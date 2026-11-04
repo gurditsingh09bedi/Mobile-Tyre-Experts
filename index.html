@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#111316">
+<title>Mobile Tyre Experts 24/7</title>
+<meta name="description" content="Mobile Tyre Experts 24/7 — emergency mobile tyre fitting, puncture repair and batteries across the UK.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: one phone-width column — 3D wheel hero, call strip, action grid, services, review band. Single dark "asphalt at night" look. */
+:root{
+  --asphalt:#111316;
+  --asphalt-2:#1A1D21;
+  --kerb:#2A2E34;
+  --line:#3A3F46;
+  --chalk:#F3F2EE;
+  --muted:#A9AEB5;
+  --amber:#FFC21A;
+  --amber-ink:#141414;
+  --display:'Barlow Condensed','Arial Narrow',Impact,sans-serif;
+  --body:'Barlow','Helvetica Neue',Arial,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--asphalt);color:var(--chalk)}
+body{font-family:var(--body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid var(--amber);outline-offset:3px;border-radius:8px}
+
+.wrap{max-width:480px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px;display:flex;flex-direction:column;gap:22px;position:relative;z-index:2}
+
+/* top status bar */
+.status{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.live{display:flex;align-items:center;gap:8px;color:var(--chalk)}
+.dot{width:8px;height:8px;border-radius:50%;background:#3BD16F;box-shadow:0 0 0 0 rgba(59,209,111,.6);animation:ping 2s infinite}
+@keyframes ping{70%{box-shadow:0 0 0 10px rgba(59,209,111,0)}100%{box-shadow:0 0 0 0 rgba(59,209,111,0)}}
+
+/* hero */
+.hero{position:relative;border-radius:24px;overflow:hidden;background:var(--asphalt-2);border:1px solid var(--kerb);min-height:430px;display:flex;flex-direction:column;justify-content:flex-end;isolation:isolate}
+#wheel{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.hero::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(17,19,22,0) 30%,rgba(17,19,22,.92) 78%)}
+.beam{position:absolute;z-index:1;top:-30%;left:-60%;width:80%;height:160%;pointer-events:none;
+  background:linear-gradient(100deg,transparent 0%,rgba(255,226,140,.16) 45%,transparent 70%);
+  transform:skewX(-12deg);animation:sweep 6s ease-in-out 0.4s infinite}
+@keyframes sweep{0%{left:-80%}55%,100%{left:130%}}
+.hero-copy{position:relative;z-index:2;padding:24px 22px 22px;display:flex;flex-direction:column;gap:10px}
+.badge{align-self:flex-start;background:var(--amber);color:var(--amber-ink);font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:1.5px;padding:5px 12px;border-radius:999px;text-transform:uppercase}
+h1{margin:0;font-family:var(--display);font-weight:900;font-size:clamp(52px,15vw,72px);line-height:.86;letter-spacing:-.5px;text-transform:uppercase;text-wrap:balance}
+h1 span{display:block}
+h1 .y{color:var(--amber)}
+.reveal span{animation:rise .9s cubic-bezier(.2,.8,.2,1) both}
+.reveal span:nth-child(2){animation-delay:.12s}
+@keyframes rise{from{transform:translateY(40%);opacity:.2;filter:blur(6px)}to{transform:none;opacity:1;filter:none}}
+.lede{margin:0;color:var(--muted);font-size:17px;max-width:34ch}
+
+/* call strip */
+.call{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--amber);color:var(--amber-ink);border-radius:20px;padding:16px 18px;position:relative;overflow:hidden}
+.call::after{content:"";position:absolute;left:0;right:0;bottom:0;height:8px;background:repeating-linear-gradient(90deg,var(--amber-ink) 0 22px,transparent 22px 38px);opacity:.85}
+.call small{display:block;font-family:var(--mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase}
+.call strong{font-family:var(--display);font-weight:800;font-size:34px;line-height:1;font-variant-numeric:tabular-nums}
+.call .go{width:54px;height:54px;border-radius:50%;background:var(--amber-ink);color:var(--amber);display:grid;place-items:center;flex:none;animation:ring 2.4s ease-in-out infinite}
+@keyframes ring{0%,80%,100%{transform:rotate(0)}84%{transform:rotate(-14deg)}88%{transform:rotate(12deg)}92%{transform:rotate(-8deg)}}
+
+/* action grid */
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.act{display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:18px;background:var(--asphalt-2);border:1px solid var(--kerb);min-height:104px;transition:transform .2s,border-color .2s,background .2s;transform-style:preserve-3d}
+.act:hover,.act:active{border-color:var(--amber);background:#202328}
+.act svg{color:var(--amber)}
+.act b{font-family:var(--display);font-weight:700;font-size:21px;letter-spacing:.3px;line-height:1.05}
+.act span{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
+.act.wide{grid-column:1/-1;flex-direction:row;align-items:center;justify-content:space-between}
+.act.save{background:var(--chalk);color:var(--amber-ink);border-color:var(--chalk)}
+.act.save svg{color:var(--amber-ink)}
+.act.save span{color:#4A4F57}
+
+/* services */
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+h2{margin:0;font-family:var(--display);font-weight:800;font-size:28px;text-transform:uppercase;letter-spacing:.3px}
+.sec-h small{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.svc{display:flex;flex-wrap:wrap;gap:8px}
+.svc span{padding:8px 13px;border-radius:999px;border:1px solid var(--line);font-size:14px;font-weight:600}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--kerb);border-radius:18px;overflow:hidden}
+.facts div{padding:14px 10px;text-align:center;display:flex;flex-direction:column;gap:2px}
+.facts div+div{border-left:1px solid var(--kerb)}
+.facts b{font-family:var(--display);font-weight:800;font-size:28px;color:var(--amber);line-height:1}
+.facts span{font-size:12px;color:var(--muted)}
+
+/* review band */
+.review{display:flex;flex-direction:column;gap:12px;padding:20px;border-radius:22px;background:var(--asphalt-2);border:1px dashed var(--amber)}
+.review p{margin:0;color:var(--muted)}
+.stars{display:flex;gap:4px;color:var(--amber)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 20px;border-radius:14px;font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:.5px;text-transform:uppercase;border:0;cursor:pointer}
+.btn.y{background:var(--amber);color:var(--amber-ink)}
+.btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--line);font-size:17px}
+
+.social{display:flex;gap:10px;justify-content:center}
+.social a{width:48px;height:48px;border-radius:50%;border:1px solid var(--kerb);display:grid;place-items:center;color:var(--chalk)}
+.social a:hover{border-color:var(--amber);color:var(--amber)}
+footer{text-align:center;font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:4px}
+footer a{color:var(--muted);text-decoration:underline}
+
+/* review popup */
+.modal{position:fixed;inset:0;z-index:50;display:grid;place-items:end center;padding:16px max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:rgba(5,6,8,.72);backdrop-filter:blur(6px)}
+.sheet{width:100%;max-width:440px;background:var(--asphalt-2);border:1px solid var(--line);border-radius:26px;padding:24px 20px 20px;display:flex;flex-direction:column;gap:14px;animation:up .45s cubic-bezier(.2,.9,.2,1) both;position:relative;overflow:hidden}
+.sheet::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;background:repeating-linear-gradient(90deg,var(--amber) 0 22px,transparent 22px 38px)}
+@keyframes up{from{transform:translateY(60px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+.sheet h3{margin:0;padding-right:52px;font-family:var(--display);font-weight:900;font-size:34px;line-height:.95;text-transform:uppercase}
+.sheet p{margin:0;color:var(--muted)}
+.pick{display:flex;gap:6px;justify-content:center;padding:4px 0}
+.pick button{background:none;border:0;padding:4px;cursor:pointer;color:var(--line);transition:transform .15s,color .15s}
+.pick button.on{color:var(--amber);transform:scale(1.12)}
+.pick button:hover{transform:scale(1.18)}
+.sheet .row{display:flex;flex-direction:column;gap:8px}
+.x{position:absolute;top:14px;right:14px;width:44px;height:44px;border-radius:50%;background:var(--kerb);border:0;color:var(--chalk);cursor:pointer;display:grid;place-items:center}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="status" aria-label="Service status">
+    <span class="live"><i class="dot" aria-hidden="true"></i>Fitters on call now</span>
+    <span>Open 24 hrs · 7 days</span>
+  </div>
+
+  <section class="hero" id="hero">
+    <canvas id="wheel" aria-hidden="true"></canvas>
+    <div class="beam" aria-hidden="true"></div>
+    <div class="hero-copy">
+      <span class="badge">24/7 Emergency</span>
+      <h1 class="reveal"><span>Mobile Tyre</span><span class="y">Experts</span></h1>
+      <p class="lede">Flat tyre or dead battery? We come to you — home, work or roadside, anywhere in the UK.</p>
+    </div>
+  </section>
+
+  <a class="call" href="tel:+447419178888" aria-label="Call 07419 178888">
+    <div>
+      <small>Tap to call · any hour</small>
+      <strong>07419 178888</strong>
+    </div>
+    <span class="go" aria-hidden="true">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>
+    </span>
+  </a>
+
+  <div class="grid">
+    <a class="act tilt" href="https://wa.me/447340084756?text=Hi%2C%20I%20need%20tyre%20help.%20My%20location%20is%3A" target="_blank" rel="noopener">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.4A8.4 8.4 0 1 1 21 11.5z"/></svg>
+      <b>WhatsApp</b><span>Send your location &amp; a tyre photo</span>
+    </a>
+    <a class="act tilt" href="tel:+447340084756">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></svg>
+      <b>Alt. Phone</b><span>07340 084756</span>
+    </a>
+    <a class="act tilt" href="mailto:support@mobiletyreexperts.co.uk?subject=Tyre%20quote">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
+      <b>Email</b><span>support@mobiletyreexperts.co.uk</span>
+    </a>
+    <a class="act tilt" href="https://mobiletyreexperts.co.uk/" target="_blank" rel="noopener">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/></svg>
+      <b>Website</b><span>mobiletyreexperts.co.uk</span>
+    </a>
+    <a class="act wide tilt" href="https://www.google.com/maps/search/?api=1&amp;query=Mobile+Tyre+Experts+25+Walnut+Tree+Rd+Hounslow+TW5+0LP" target="_blank" rel="noopener">
+      <div style="display:flex;flex-direction:column;gap:4px;min-width:0"><b>Directions</b><span>25 Walnut Tree Rd, Hounslow TW5 0LP</span></div>
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>
+    </a>
+    <a class="act wide save tilt" href="contact.vcf" download="Mobile-Tyre-Experts.vcf" id="saveContact">
+      <div style="display:flex;flex-direction:column;gap:4px"><b>Save Contact</b><span>Keep us in your phone for next time</span></div>
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+    </a>
+  </div>
+
+  <section style="display:flex;flex-direction:column;gap:12px">
+    <div class="sec-h"><h2>What we fix</h2><small>On the spot</small></div>
+    <div class="svc">
+      <span>Puncture repair</span><span>Onsite tyre fitting</span><span>Battery replacement</span><span>Tyre inspection</span><span>Wheel balancing</span><span>Wheel rotation</span>
+    </div>
+    <div class="facts">
+      <div><b>24/7</b><span>Incl. holidays</span></div>
+      <div><b>UK</b><span>Wide coverage</span></div>
+      <div><b>Same</b><span>Day service</span></div>
+    </div>
+  </section>
+
+  <section class="review" id="reviewBand">
+    <div class="stars" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9.9-5 4.8 1.2 6.9L12 17.6 5.9 20.9 7.1 14 2.1 9.2 9 8.3z"/></svg><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9.9-5 4.8 1.2 6.9L12 17.6 5.9 20.9 7.1 14 2.1 9.2 9 8.3z"/></svg><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9.9-5 4.8 1.2 6.9L12 17.6 5.9 20.9 7.1 14 2.1 9.2 9 8.3z"/></svg><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9.9-5 4.8 1.2 6.9L12 17.6 5.9 20.9 7.1 14 2.1 9.2 9 8.3z"/></svg><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9.9-5 4.8 1.2 6.9L12 17.6 5.9 20.9 7.1 14 2.1 9.2 9 8.3z"/></svg>
+    </div>
+    <h2>Back on the road?</h2>
+    <p>A quick Google review helps other drivers find us when they're stuck.</p>
+    <a class="btn y review-link" href="#" target="_blank" rel="noopener">Leave a Google review</a>
+  </section>
+
+  <div class="social">
+    <a href="https://www.facebook.com/people/Mobile-Tyre-Experts-247-Ltd/61558576555931/" target="_blank" rel="noopener" aria-label="Facebook"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+    <a href="https://www.instagram.com/mobiletyre_experts/" target="_blank" rel="noopener" aria-label="Instagram"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg></a>
+    <a href="https://www.youtube.com/channel/UCePuNIo91Dk1lMOam8ll5lw" target="_blank" rel="noopener" aria-label="YouTube"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="m10 9 5 3-5 3z" fill="currentColor"/></svg></a>
+  </div>
+
+  <footer>
+    <span>© 2026 Mobile Tyre Experts 24/7 Ltd</span>
+    <span>Smart card by <a href="https://nexauraconsultant.co.uk" target="_blank" rel="noopener">Nexaura Consultant</a></span>
+  </footer>
+</div>
+
+<!-- Google review popup: shows when the visitor tries to go back / leave -->
+<div class="modal" id="reviewModal" hidden role="dialog" aria-modal="true" aria-labelledby="rvTitle">
+  <div class="sheet">
+    <button class="x" id="rvClose" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <h3 id="rvTitle">Before you go —<br>how did we do?</h3>
+    <p>It takes 20 seconds and helps the next stranded driver find a fitter fast.</p>
+    <div class="pick" id="pick" aria-label="Your rating"></div>
+    <div class="row">
+      <a class="btn y review-link" href="#" target="_blank" rel="noopener" id="rvGo">Write a Google review</a>
+      <button class="btn ghost" id="rvLater">Maybe later</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ======= EDIT THIS: the business's Google review link ======= */
+// Abhi: Google search ka link, jisse listing ka review panel khulta hai.
+// Behtar: Business Profile ka direct link (https://g.page/r/XXXX/review) yahan daalo.
+const GOOGLE_REVIEW_URL = "https://www.google.com/maps/search/?api=1&query=Mobile+Tyre+Experts+25+Walnut+Tree+Rd+Hounslow+TW5+0LP";
+/* ============================================================ */
+
+document.querySelectorAll('.review-link').forEach(a => a.href = GOOGLE_REVIEW_URL);
+
+/* ---------- Review popup + back-button trap ---------- */
+(function(){
+  const modal = document.getElementById('reviewModal');
+  const pick = document.getElementById('pick');
+  let shown = false, armed = false, leaving = false;
+  const store = {
+    get(k){ try { return sessionStorage.getItem(k); } catch(e){ return null; } },
+    set(k,v){ try { sessionStorage.setItem(k,v); } catch(e){} }
+  };
+  if (store.get('mte_rv') === 'done') shown = true;
+
+  for (let i = 1; i <= 5; i++){
+    const b = document.createElement('button');
+    b.type = 'button'; b.setAttribute('aria-label', i + ' star' + (i>1?'s':''));
+    b.innerHTML = '<svg width="38" height="38" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9.9-5 4.8 1.2 6.9L12 17.6 5.9 20.9 7.1 14 2.1 9.2 9 8.3z"/></svg>';
+    b.addEventListener('click', () => {
+      [...pick.children].forEach((s, j) => s.classList.toggle('on', j < i));
+      setTimeout(() => window.open(GOOGLE_REVIEW_URL, '_blank', 'noopener'), 250);
+    });
+    pick.appendChild(b);
+  }
+
+  function open(){
+    if (shown) return false;
+    shown = true; store.set('mte_rv','done');
+    modal.hidden = false;
+    document.getElementById('rvGo').focus();
+    return true;
+  }
+  function close(){ modal.hidden = true; }
+
+  // 1) BACK button / swipe-back: push an extra history entry so Back hits our page first.
+  //    Chrome ignores entries added before the visitor touches the page, so push again on first touch.
+  function push(){ try { history.pushState({ mteTrap: Date.now() }, '', location.href); armed = true; } catch(e){} }
+  push();
+  let gestured = false;
+  const onGesture = () => { if (gestured) return; gestured = true; if (!shown) push(); };
+  ['pointerdown','touchstart','keydown','scroll','wheel'].forEach(ev =>
+    window.addEventListener(ev, onGesture, { passive: true }));
+
+  let viaBack = false;
+  window.addEventListener('popstate', () => {
+    if (leaving || shown) { leaving = true; history.back(); return; } // already asked once: let them go (skips our extra entries)
+    if (open()) { viaBack = true; push(); }                              // first Back: stay and show the review popup
+  });
+
+  // 2) DESKTOP: mouse moves up toward the tab bar / close (X) button
+  //    Only after the visitor has actually moved the mouse inside the page for 3s, so it never fires on load.
+  let exitReady = false, loadedAt = Date.now();
+  document.addEventListener('mousemove', e => {
+    if (!exitReady && e.clientY > 40 && Date.now() - loadedAt > 3000) exitReady = true;
+  }, { passive: true });
+  document.addEventListener('mouseout', e => {
+    if (exitReady && !e.relatedTarget && e.clientY <= 5) open();
+  });
+
+  // 3) PHONE: visitor switches tab/app or locks the screen.
+  //    A browser can't draw a popup while the page is hidden, so it is ready the moment they come back.
+  let wentAway = false;
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') wentAway = true;
+    else if (wentAway) open();
+  });
+  window.addEventListener('pagehide', () => { wentAway = true; });
+  window.addEventListener('pageshow', e => { if (e.persisted && wentAway) open(); });
+
+  document.getElementById('rvClose').onclick = close;
+  document.getElementById('rvLater').onclick = () => {
+    close(); leaving = true;
+    if (viaBack) history.back();   // they were going back: take them back now
+  };
+  modal.addEventListener('click', e => { if (e.target === modal) close(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) close(); });
+})();
+
+/* ---------- 3D tilt on action tiles ---------- */
+(function(){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('.tilt').forEach(el => {
+    el.addEventListener('pointermove', e => {
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      el.style.transform = `perspective(600px) rotateY(${x*12}deg) rotateX(${-y*12}deg) translateZ(4px)`;
+    });
+    el.addEventListener('pointerleave', () => el.style.transform = '');
+  });
+})();
+
+/* ---------- Cinematic 3D wheel ---------- */
+(function(){
+  const canvas = document.getElementById('wheel');
+  const hero = document.getElementById('hero');
+  if (!window.THREE) return;
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true }); } catch(e){ return; }
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x111316, 8, 18);
+  const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 50);
+  camera.position.set(0, 0.6, 9);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.25));
+  const key = new THREE.DirectionalLight(0xffffff, 1.0); key.position.set(4, 5, 6); scene.add(key);
+  const amber = new THREE.PointLight(0xffc21a, 2.4, 14); amber.position.set(-3, 1, 3); scene.add(amber);
+  const rimL = new THREE.PointLight(0x8fb4ff, 0.8, 12); rimL.position.set(4, -2, -2); scene.add(rimL);
+
+  const wheel = new THREE.Group();
+  // tyre
+  const rubber = new THREE.MeshStandardMaterial({ color: 0x0d0e10, roughness: 0.85, metalness: 0.05 });
+  wheel.add(new THREE.Mesh(new THREE.TorusGeometry(1.75, 0.62, 28, 90), rubber));
+  // tread blocks
+  const treadGeo = new THREE.BoxGeometry(0.22, 0.34, 1.0);
+  const treadMat = new THREE.MeshStandardMaterial({ color: 0x17191c, roughness: 0.9 });
+  const N = 44;
+  for (let i = 0; i < N; i++){
+    const a = (i / N) * Math.PI * 2;
+    const b = new THREE.Mesh(treadGeo, treadMat);
+    b.position.set(Math.cos(a) * 2.33, Math.sin(a) * 2.33, 0);
+    b.rotation.z = a; b.rotation.y = (i % 2 ? 0.35 : -0.35);
+    wheel.add(b);
+  }
+  // rim
+  const alloy = new THREE.MeshStandardMaterial({ color: 0xc9ced6, metalness: 0.95, roughness: 0.25 });
+  const rimRing = new THREE.Mesh(new THREE.TorusGeometry(1.2, 0.09, 16, 80), alloy); wheel.add(rimRing);
+  const barrel = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 0.7, 60, 1, true),
+    new THREE.MeshStandardMaterial({ color: 0x2a2e34, metalness: 0.8, roughness: 0.4, side: THREE.DoubleSide }));
+  barrel.rotation.x = Math.PI / 2; wheel.add(barrel);
+  for (let i = 0; i < 5; i++){
+    const s = new THREE.Mesh(new THREE.BoxGeometry(0.2, 1.15, 0.12), alloy);
+    const a = (i / 5) * Math.PI * 2;
+    s.position.set(Math.cos(a) * 0.62, Math.sin(a) * 0.62, 0.22); s.rotation.z = a - Math.PI / 2;
+    wheel.add(s);
+  }
+  const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, 0.3, 32),
+    new THREE.MeshStandardMaterial({ color: 0xffc21a, metalness: 0.6, roughness: 0.3, emissive: 0x3a2a00 }));
+  hub.rotation.x = Math.PI / 2; hub.position.z = 0.25; wheel.add(hub);
+  // brake disc glow
+  const disc = new THREE.Mesh(new THREE.RingGeometry(0.4, 1.05, 48),
+    new THREE.MeshBasicMaterial({ color: 0xff7a1a, transparent: true, opacity: 0.18, side: THREE.DoubleSide }));
+  disc.position.z = -0.1; wheel.add(disc);
+
+  wheel.rotation.y = -0.55;
+  scene.add(wheel);
+
+  // road line
+  const road = new THREE.Group();
+  for (let i = 0; i < 14; i++){
+    const d = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 0.08), new THREE.MeshBasicMaterial({ color: 0xffc21a, transparent: true, opacity: 0.55 }));
+    d.rotation.x = -Math.PI / 2; d.position.set(-9 + i * 1.6, -2.75, 0.5);
+    road.add(d);
+  }
+  scene.add(road);
+
+  // sparks
+  const SP = 140, pos = new Float32Array(SP * 3), vel = [];
+  const spawn = i => {
+    pos[i*3] = 0.6 + Math.random() * 0.6; pos[i*3+1] = -2.4; pos[i*3+2] = (Math.random() - .5) * 0.8;
+    vel[i] = [Math.random() * 0.09 + 0.03, Math.random() * 0.06 + 0.01, (Math.random() - .5) * 0.03, Math.random()];
+  };
+  for (let i = 0; i < SP; i++){ spawn(i); pos[i*3] += Math.random() * 3; }
+  const sg = new THREE.BufferGeometry(); sg.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const sparks = new THREE.Points(sg, new THREE.PointsMaterial({ color: 0xffc21a, size: 0.06, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false }));
+  scene.add(sparks);
+
+  function size(){
+    const w = hero.clientWidth, h = hero.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.updateProjectionMatrix();
+    wheel.position.set(w < 420 ? 0.6 : 1.2, 0.85, 0);
+    const sc = w < 420 ? 0.9 : 1; wheel.scale.set(sc, sc, sc);
+  }
+  size(); addEventListener('resize', size);
+
+  let tx = 0, ty = 0, cx = 0, cy = 0;
+  hero.addEventListener('pointermove', e => {
+    const r = hero.getBoundingClientRect();
+    tx = ((e.clientX - r.left) / r.width - .5); ty = ((e.clientY - r.top) / r.height - .5);
+  });
+  hero.addEventListener('pointerleave', () => { tx = ty = 0; });
+
+  const t0 = performance.now();
+  function frame(now){
+    const t = (now - t0) / 1000;
+    const intro = reduce ? 1 : Math.min(1, t / 1.6), ease = 1 - Math.pow(1 - intro, 3);
+    wheel.position.x = (hero.clientWidth < 420 ? 0.6 : 1.2) + (1 - ease) * -7; // rolls in from the left
+    const spin = reduce ? 0 : (t < 1.6 ? 9 * (1 - intro) + 0.8 : 0.8);
+    wheel.rotation.z -= spin * 0.016;
+    cx += (tx - cx) * 0.06; cy += (ty - cy) * 0.06;
+    wheel.rotation.y = -0.55 + cx * 0.6; wheel.rotation.x = cy * 0.4;
+    camera.position.x = cx * 0.6; camera.lookAt(0.5, 0.4, 0);
+    road.children.forEach(d => { d.position.x -= reduce ? 0 : 0.04; if (d.position.x < -10) d.position.x += 22.4; });
+    if (!reduce){
+      for (let i = 0; i < SP; i++){
+        const v = vel[i]; pos[i*3] += v[0]; pos[i*3+1] += v[1]; pos[i*3+2] += v[2]; v[1] -= 0.0018; v[3] -= 0.012;
+        if (v[3] <= 0 || pos[i*3+1] < -2.8) spawn(i);
+      }
+      sg.attributes.position.needsUpdate = true;
+      amber.intensity = 2.2 + Math.sin(t * 3) * 0.4;
+    }
+    renderer.render(scene, camera);
+    if (!reduce || t < 1.7) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+
+</body>
+</html>
